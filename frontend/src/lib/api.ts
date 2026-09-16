@@ -421,6 +421,23 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
     return MOCK_JOBS as unknown as T;
   }
 
+  if (path.startsWith('/forecast/')) {
+    const parts = path.split('/');
+    const product = decodeURIComponent(parts[2] || 'Tomato');
+    const location = decodeURIComponent(parts[3] || 'Mumbai');
+    return {
+      product,
+      location,
+      currentWeeklyDemand: 12500,
+      predictedDemand: 17800,
+      expectedChangePercent: 42.4,
+      potentialShortage: 3600,
+      season: 'Rabi Harvest',
+      isEstimate: true,
+      disclaimer: 'AI forecast based on historical APMC arrivals and buyer contracts',
+    } as unknown as T;
+  }
+
   if (path.startsWith('/forecast')) {
     return [
       {
@@ -435,6 +452,54 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
         disclaimer: 'AI forecast based on historical APMC arrivals and buyer contracts',
       },
     ] as unknown as T;
+  }
+
+  if (path.includes('/price-breakdown')) {
+    return {
+      orderId: 'ord-301',
+      orderNumber: 'ORD-2026-089',
+      totalQuantity: 5000,
+      priceBreakdown: {
+        buyerPaysPerKg: 29.5,
+        logisticsPerKg: 2.5,
+        platformFeePerKg: 0.8,
+        farmerRealizationPerKg: 26.2,
+        traditionalRealizationPerKg: 21.0,
+        estimatedSavingsPerKg: 5.2,
+      },
+      totals: {
+        buyerTotal: 147500,
+        logisticsTotal: 12500,
+        platformTotal: 4000,
+        farmerPayoutTotal: 131000,
+      },
+      comparison: {
+        traditional: 105000,
+        platform: 131000,
+        difference: 26000,
+        label: 'Farmer Realization Improvement',
+      },
+      isEstimate: true,
+    } as unknown as T;
+  }
+
+  if (path.startsWith('/matching/')) {
+    return {
+      demand: MOCK_DEMANDS[0],
+      matches: [],
+      consolidation: {
+        totalRequired: 5000,
+        totalAllocated: 5000,
+        shortage: 0,
+        supplierCount: 2,
+        isFullyMatched: true,
+      },
+      isEstimate: true,
+    } as unknown as T;
+  }
+
+  if (path.startsWith('/orders/')) {
+    return MOCK_ORDERS[0] as unknown as T;
   }
 
   return undefined;
