@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Leaf, ShieldAlert, ArrowRight, CheckCircle2, UserCheck, AlertCircle } from 'lucide-react';
+import { Leaf, ShieldAlert, UserCheck, AlertCircle } from 'lucide-react';
 import { api, setAuth } from '@/lib/api';
 
 const ROLE_REDIRECT: Record<string, string> = {
@@ -14,51 +14,12 @@ const ROLE_REDIRECT: Record<string, string> = {
   ADMIN: '/dashboard/admin',
 };
 
-const DEMO_ACCOUNTS = [
-  {
-    role: 'Admin',
-    name: 'System Admin',
-    email: 'admin@agrichain.in',
-    badge: 'System Control Tower',
-    color: 'bg-red-50 border-red-200 text-red-900',
-  },
-  {
-    role: 'Buyer',
-    name: 'Vikram Mehta (SpiceRoute)',
-    email: 'buyer@mumbai.com',
-    badge: 'Demand Creator',
-    color: 'bg-blue-50 border-blue-200 text-blue-900',
-  },
-  {
-    role: 'Logistics',
-    name: 'Raj Cold Chain Services',
-    email: 'logistics@agrichain.in',
-    badge: 'Fleet Dispatcher',
-    color: 'bg-amber-50 border-amber-200 text-amber-900',
-  },
-  {
-    role: 'FPO A',
-    name: 'Nashik Sunrise FPO',
-    email: 'fpo.nashik@agrichain.in',
-    badge: 'Aggregator (45 Farmers)',
-    color: 'bg-emerald-50 border-emerald-200 text-emerald-900',
-  },
-  {
-    role: 'Farmer C',
-    name: 'Rajesh Patil',
-    email: 'farmer.rajesh@agrichain.in',
-    badge: 'Direct Farm Producer',
-    color: 'bg-green-50 border-green-200 text-green-900',
-  },
-];
-
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('admin@agrichain.in');
   const [password, setPassword] = useState('demo123');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [instantLoginRole, setInstantLoginRole] = useState<string | null>(null);
 
   const executeLogin = async (targetEmail: string, targetPass: string) => {
     setLoading(true);
@@ -71,20 +32,12 @@ export default function LoginPage() {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
       setLoading(false);
-      setInstantLoginRole(null);
     }
   };
 
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     executeLogin(email, password);
-  };
-
-  const handleInstantLogin = (targetEmail: string, roleName: string) => {
-    setEmail(targetEmail);
-    setPassword('demo123');
-    setInstantLoginRole(roleName);
-    executeLogin(targetEmail, 'demo123');
   };
 
   return (
@@ -149,7 +102,7 @@ export default function LoginPage() {
             <div className="flex items-center justify-between pb-4 border-b border-gray-100">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Sign in to AgriChain</h2>
-                <p className="mt-1 text-gray-500 text-sm">Select an account or enter custom credentials</p>
+                <p className="mt-1 text-gray-500 text-sm">Enter your account credentials</p>
               </div>
               <Link href="/register" className="hidden sm:inline-flex text-xs font-semibold text-primary-700 hover:underline">
                 Create Account →
@@ -163,35 +116,51 @@ export default function LoginPage() {
               </div>
             )}
 
-            {/* Quick 1-Click Admin Access Banner */}
-            <div className="mt-5 p-4 bg-navy-900 text-white rounded-xl flex items-center justify-between">
-              <div>
+            {/* Credentials Reference Card */}
+            <div className="mt-5 p-4 bg-slate-900 text-white rounded-xl border border-slate-800">
+              <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 bg-red-600 text-white rounded text-[10px] font-bold uppercase tracking-wider">
-                    Admin
+                  <ShieldAlert className="w-4 h-4 text-emerald-400" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                    Admin & Demo Credentials
                   </span>
-                  <span className="font-bold text-sm">System Control Tower</span>
                 </div>
-                <p className="text-xs text-gray-300 mt-1">admin@agrichain.in (demo123)</p>
+                <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
+                  Password: demo123
+                </span>
               </div>
-              <button
-                type="button"
-                onClick={() => handleInstantLogin('admin@agrichain.in', 'Admin')}
-                disabled={loading}
-                className="px-3 py-1.5 bg-white text-navy-900 hover:bg-gray-100 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1 shadow-sm"
-              >
-                {instantLoginRole === 'Admin' ? 'Entering...' : '1-Click Admin'} <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="space-y-1.5 text-xs font-mono">
+                <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
+                  <span className="text-slate-400 font-sans">Admin (Control Tower):</span>
+                  <span className="text-amber-300 font-semibold">admin@agrichain.in</span>
+                </div>
+                <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
+                  <span className="text-slate-400 font-sans">Buyer (SpiceRoute):</span>
+                  <span className="text-white">buyer@mumbai.com</span>
+                </div>
+                <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
+                  <span className="text-slate-400 font-sans">Logistics (Fleet):</span>
+                  <span className="text-white">logistics@agrichain.in</span>
+                </div>
+                <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
+                  <span className="text-slate-400 font-sans">Farmer (Producer):</span>
+                  <span className="text-white">farmer.rajesh@agrichain.in</span>
+                </div>
+                <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
+                  <span className="text-slate-400 font-sans">FPO (Aggregator):</span>
+                  <span className="text-white">fpo.nashik@agrichain.in</span>
+                </div>
+              </div>
             </div>
 
-            {/* Manual Form */}
+            {/* Standard Manual Form */}
             <form onSubmit={handleManualSubmit} className="mt-6 space-y-4">
               <div>
                 <label className="label">Email address</label>
                 <input
                   type="email"
                   className="input"
-                  placeholder="name@company.com"
+                  placeholder="admin@agrichain.in"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -201,7 +170,7 @@ export default function LoginPage() {
               <div>
                 <div className="flex items-center justify-between">
                   <label className="label">Password</label>
-                  <span className="text-xs text-gray-400">Default: demo123</span>
+                  <span className="text-xs text-gray-400 font-mono">demo123</span>
                 </div>
                 <input
                   type="password"
@@ -215,10 +184,10 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="btn-primary w-full py-2.5 flex items-center justify-center gap-2"
+                className="btn-primary w-full py-2.5 flex items-center justify-center gap-2 mt-2"
                 disabled={loading}
               >
-                {loading && !instantLoginRole ? (
+                {loading ? (
                   <span className="inline-block animate-pulse">Authenticating...</span>
                 ) : (
                   <>
@@ -227,33 +196,6 @@ export default function LoginPage() {
                 )}
               </button>
             </form>
-
-            {/* Quick 1-Click Role Logins */}
-            <div className="mt-8 pt-6 border-t border-gray-100">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                1-Click Persona Logins (Instant Access)
-              </p>
-              <div className="grid sm:grid-cols-2 gap-2">
-                {DEMO_ACCOUNTS.filter((acc) => acc.role !== 'Admin').map((acc) => (
-                  <button
-                    key={acc.email}
-                    type="button"
-                    onClick={() => handleInstantLogin(acc.email, acc.role)}
-                    disabled={loading}
-                    className="text-left p-2.5 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50/50 transition-all flex flex-col justify-between group"
-                  >
-                    <div className="flex items-center justify-between w-full">
-                      <span className="text-xs font-bold text-gray-900 group-hover:text-primary-800">
-                        {acc.role}
-                      </span>
-                      <span className="text-[10px] text-gray-400 font-mono">1-click</span>
-                    </div>
-                    <span className="text-xs text-gray-600 truncate mt-1">{acc.name}</span>
-                    <span className="text-[11px] text-gray-400 font-mono truncate">{acc.email}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
 
             <div className="mt-6 text-center text-sm text-gray-500">
               Need a new test profile?{' '}
