@@ -1,0 +1,530 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  FARMER
+  FPO
+  BUYER
+  LOGISTICS
+  ADMIN
+}
+
+enum QualityGrade {
+  A
+  B
+  C
+}
+
+enum DemandStatus {
+  OPEN
+  MATCHING
+  MATCHED
+  FULFILLED
+  CANCELLED
+}
+
+enum ListingStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+  EXPIRED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  READY_FOR_PICKUP
+  IN_TRANSIT
+  DELIVERED
+  COMPLETED
+  CANCELLED
+}
+
+enum LogisticsJobStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum VehicleType {
+  MINI_TRUCK
+  TRUCK
+  LARGE_TRUCK
+  TEMPO
+  REFRIGERATED_TRUCK
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum BuyerType {
+  RESTAURANT
+  HOTEL
+  RETAILER
+  WHOLESALER
+  FOOD_PROCESSOR
+  INSTITUTION
+  INDIVIDUAL
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         UserRole
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  farmer            Farmer?
+  fpo               FPO?
+  buyer             Buyer?
+  logisticsProvider LogisticsProvider?
+  notifications     Notification[]
+  reviewsGiven      Review[]           @relation("ReviewsGiven")
+  reviewsReceived   Review[]           @relation("ReviewsReceived")
+
+  @@index([role])
+  @@index([email])
+}
+
+model Farmer {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  farmName         String
+  location         String
+  latitude         Float?
+  longitude        Float?
+  state            String?
+  district         String?
+  reliabilityScore Float    @default(75)
+  totalOrders      Int      @default(0)
+  completedOrders  Int      @default(0)
+  onTimeRate       Float    @default(85)
+  qualityRate      Float    @default(85)
+  cancellationRate Float    @default(5)
+  avgRating        Float    @default(4.0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  farms           Farm[]
+  produceListings ProduceListing[]
+  fpoMemberships  FPOMember[]
+  supplierMatches SupplierMatch[]
+  orderItems      OrderItem[]
+
+  @@index([location])
+}
+
+model Farm {
+  id        String   @id @default(cuid())
+  farmerId  String
+  name      String
+  location  String
+  latitude  Float?
+  longitude Float?
+  areaAcres Float?
+  crops     String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  farmer Farmer @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+
+  @@index([farmerId])
+}
+
+model FPO {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  name             String
+  location         String
+  latitude         Float?
+  longitude        Float?
+  state            String?
+  district         String?
+  memberCount      Int      @default(0)
+  reliabilityScore Float    @default(80)
+  totalOrders      Int      @default(0)
+  completedOrders  Int      @default(0)
+  onTimeRate       Float    @default(90)
+  qualityRate      Float    @default(88)
+  cancellationRate Float    @default(3)
+  avgRating        Float    @default(4.2)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  members         FPOMember[]
+  produceListings ProduceListing[]
+  supplierMatches SupplierMatch[]
+  orderItems      OrderItem[]
+
+  @@index([location])
+}
+
+model FPOMember {
+  id       String   @id @default(cuid())
+  fpoId    String
+  farmerId String
+  joinedAt DateTime @default(now())
+  isActive Boolean  @default(true)
+
+  fpo    FPO    @relation(fields: [fpoId], references: [id], onDelete: Cascade)
+  farmer Farmer @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+
+  @@unique([fpoId, farmerId])
+  @@index([fpoId])
+  @@index([farmerId])
+}
+
+model Buyer {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  company   String
+  buyerType BuyerType
+  location  String
+  latitude  Float?
+  longitude Float?
+  address   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  demands Demand[]
+  orders  Order[]
+  reviews Review[]
+
+  @@index([location])
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String
+  unit        String   @default("kg")
+  description String?
+  createdAt   DateTime @default(now())
+
+  produceListings ProduceListing[]
+  demands         Demand[]
+  priceHistory    PriceHistory[]
+  demandForecasts DemandForecast[]
+}
+
+model ProduceListing {
+  id             String        @id @default(cuid())
+  productId      String
+  farmerId       String?
+  fpoId          String?
+  quantity       Float
+  availableQty   Float
+  grade          QualityGrade
+  expectedPrice  Float
+  harvestDate    DateTime
+  location       String
+  latitude       Float?
+  longitude      Float?
+  status         ListingStatus @default(AVAILABLE)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  product         Product          @relation(fields: [productId], references: [id])
+  farmer          Farmer?          @relation(fields: [farmerId], references: [id])
+  fpo             FPO?             @relation(fields: [fpoId], references: [id])
+  supplierMatches SupplierMatch[]
+
+  @@index([productId, status])
+  @@index([farmerId])
+  @@index([fpoId])
+  @@index([location])
+}
+
+model Demand {
+  id              String       @id @default(cuid())
+  buyerId         String
+  productId       String
+  quantity        Float
+  grade           QualityGrade
+  maxPrice        Float
+  deliveryLocation String
+  deliveryLat     Float?
+  deliveryLng     Float?
+  requiredBy      DateTime
+  status          DemandStatus @default(OPEN)
+  notes           String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  buyer           Buyer            @relation(fields: [buyerId], references: [id])
+  product         Product          @relation(fields: [productId], references: [id])
+  supplierMatches SupplierMatch[]
+  orders          Order[]
+
+  @@index([buyerId])
+  @@index([productId, status])
+  @@index([deliveryLocation])
+}
+
+model SupplierMatch {
+  id               String   @id @default(cuid())
+  demandId         String
+  listingId        String
+  farmerId         String?
+  fpoId            String?
+  allocatedQty     Float
+  matchScore       Float
+  priceScore       Float
+  distanceScore    Float
+  quantityScore    Float
+  qualityScore     Float
+  deliveryScore    Float
+  reliabilityScore Float
+  isSelected       Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  demand  Demand         @relation(fields: [demandId], references: [id], onDelete: Cascade)
+  listing ProduceListing @relation(fields: [listingId], references: [id])
+  farmer  Farmer?        @relation(fields: [farmerId], references: [id])
+  fpo     FPO?           @relation(fields: [fpoId], references: [id])
+
+  @@index([demandId])
+}
+
+model Order {
+  id                  String      @id @default(cuid())
+  orderNumber         String      @unique
+  buyerId             String
+  demandId            String?
+  status              OrderStatus @default(PENDING)
+  totalQuantity       Float
+  totalAmount         Float
+  logisticsCost       Float       @default(0)
+  platformFee         Float       @default(0)
+  pricePerKg          Float
+  deliveryLocation    String
+  deliveryLat         Float?
+  deliveryLng         Float?
+  requiredBy          DateTime
+  estimatedDelivery   DateTime?
+  deliveredAt         DateTime?
+  traditionalRealization Float?
+  platformRealization  Float?
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  buyer         Buyer          @relation(fields: [buyerId], references: [id])
+  demand        Demand?        @relation(fields: [demandId], references: [id])
+  items         OrderItem[]
+  logisticsJob  LogisticsJob?
+  payments      Payment[]
+  statusHistory OrderStatusHistory[]
+
+  @@index([buyerId])
+  @@index([status])
+  @@index([orderNumber])
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  farmerId     String?
+  fpoId        String?
+  productName  String
+  quantity     Float
+  grade        QualityGrade
+  pricePerKg   Float
+  totalPrice   Float
+  farmerPayout Float
+
+  order  Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  farmer Farmer? @relation(fields: [farmerId], references: [id])
+  fpo    FPO?    @relation(fields: [fpoId], references: [id])
+
+  @@index([orderId])
+}
+
+model OrderStatusHistory {
+  id        String      @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  note      String?
+  createdAt DateTime    @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model LogisticsProvider {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  company   String
+  location  String
+  latitude  Float?
+  longitude Float?
+  costPerKm Float    @default(25)
+  rating    Float    @default(4.0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicles Vehicle[]
+  jobs     LogisticsJob[]
+
+  @@index([location])
+}
+
+model Vehicle {
+  id          String      @id @default(cuid())
+  providerId  String
+  type        VehicleType
+  registration String
+  capacity    Float
+  currentLat  Float?
+  currentLng  Float?
+  isAvailable Boolean     @default(true)
+  costPerKm   Float       @default(25)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  provider LogisticsProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  jobs     LogisticsJob[]
+
+  @@index([providerId])
+}
+
+model LogisticsJob {
+  id                    String             @id @default(cuid())
+  orderId               String             @unique
+  providerId            String?
+  vehicleId             String?
+  status                LogisticsJobStatus @default(PENDING)
+  totalLoad             Float
+  totalDistance         Float?
+  estimatedCost         Float?
+  consolidatedSaving    Float?
+  separateTripsCost     Float?
+  pickupSequence        Json?
+  routePoints           Json?
+  estimatedEta          DateTime?
+  startedAt             DateTime?
+  completedAt           DateTime?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  order    Order              @relation(fields: [orderId], references: [id])
+  provider LogisticsProvider? @relation(fields: [providerId], references: [id])
+  vehicle  Vehicle?           @relation(fields: [vehicleId], references: [id])
+  route    Route?
+
+  @@index([providerId])
+  @@index([status])
+}
+
+model Route {
+  id              String   @id @default(cuid())
+  logisticsJobId  String   @unique
+  waypoints       Json
+  optimizedOrder  Int[]
+  totalDistance   Float
+  estimatedTime   Float
+  estimatedCost   Float
+  vehicleCapacity Float
+  createdAt       DateTime @default(now())
+
+  logisticsJob LogisticsJob @relation(fields: [logisticsJobId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  orderId       String
+  amount        Float
+  platformFee   Float
+  logisticsFee  Float
+  farmerPayout  Float
+  status        PaymentStatus @default(PENDING)
+  breakdown     Json?
+  processedAt   DateTime?
+  createdAt     DateTime      @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  buyerId    String
+  reviewerId String
+  revieweeId String
+  orderId    String?
+  rating     Float
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  buyer    Buyer @relation(fields: [buyerId], references: [id])
+  reviewer User  @relation("ReviewsGiven", fields: [reviewerId], references: [id])
+  reviewee User  @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+
+  @@index([buyerId])
+}
+
+model PriceHistory {
+  id        String   @id @default(cuid())
+  productId String
+  location  String
+  price     Float
+  date      DateTime
+  source    String   @default("market")
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([productId, location, date])
+}
+
+model DemandForecast {
+  id               String   @id @default(cuid())
+  productId        String
+  location         String
+  currentDemand    Float
+  predictedDemand  Float
+  changePercent    Float
+  potentialShortage Float?
+  season           String?
+  forecastDate     DateTime @default(now())
+  isEstimate       Boolean  @default(true)
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([productId, location])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  type      String   @default("info")
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
