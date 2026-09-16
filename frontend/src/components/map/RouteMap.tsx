@@ -24,6 +24,10 @@ export function RouteMap({ points, height = '400px' }: { points: Point[]; height
 
       if (mapInstance.current) {
         mapInstance.current.remove();
+        mapInstance.current = null;
+      }
+      if (mapRef.current && (mapRef.current as any)._leaflet_id) {
+        (mapRef.current as any)._leaflet_id = null;
       }
 
       const map = L.map(mapRef.current).setView([points[0].lat, points[0].lng], 8);
@@ -57,6 +61,12 @@ export function RouteMap({ points, height = '400px' }: { points: Point[]; height
         L.polyline(latlngs, { color: '#16a34a', weight: 3, dashArray: '8, 8' }).addTo(map);
         map.fitBounds(latlngs, { padding: [40, 40] });
       }
+
+      setTimeout(() => {
+        if (!cancelled && mapInstance.current) {
+          map.invalidateSize();
+        }
+      }, 250);
     });
 
     return () => {
@@ -64,6 +74,9 @@ export function RouteMap({ points, height = '400px' }: { points: Point[]; height
       if (mapInstance.current) {
         mapInstance.current.remove();
         mapInstance.current = null;
+      }
+      if (mapRef.current && (mapRef.current as any)._leaflet_id) {
+        (mapRef.current as any)._leaflet_id = null;
       }
     };
   }, [points]);

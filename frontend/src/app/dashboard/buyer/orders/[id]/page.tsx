@@ -27,7 +27,14 @@ export default function OrderTrackingPage() {
   if (!order) return <div className="text-red-600">Order not found</div>;
 
   const job = order.logisticsJob;
-  const routePoints = (job?.routePoints || job?.route?.waypoints || []) as { name: string; lat: number; lng: number; type?: string; load?: number }[];
+  const rawPoints = (job?.routePoints || job?.route?.waypoints || job?.pickupSequence || []) as { name: string; lat: number; lng: number; type?: string; load?: number }[];
+  const routePoints = rawPoints.map((p, idx) => ({
+    name: p.name,
+    lat: p.lat,
+    lng: p.lng,
+    type: (p.type || (idx === rawPoints.length - 1 ? 'delivery' : 'pickup')).toLowerCase(),
+    load: p.load,
+  }));
 
   return (
     <div className="space-y-8">

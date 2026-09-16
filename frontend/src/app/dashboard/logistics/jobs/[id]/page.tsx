@@ -51,12 +51,12 @@ export default function LogisticsJobDetailPage() {
     );
   }
 
-  const rawPoints = (job.routePoints || job.route?.waypoints || []) as RoutePoint[];
+  const rawPoints = (job.routePoints || job.route?.waypoints || job.pickupSequence || []) as RoutePoint[];
   const points = rawPoints.map((p, idx) => ({
     name: p.name,
     lat: p.lat,
     lng: p.lng,
-    type: p.type || (idx === rawPoints.length - 1 ? 'delivery' : 'pickup'),
+    type: (p.type || (idx === rawPoints.length - 1 ? 'delivery' : 'pickup')).toLowerCase(),
     load: p.load,
   }));
 

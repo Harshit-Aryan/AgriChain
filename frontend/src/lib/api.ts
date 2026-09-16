@@ -203,6 +203,82 @@ const MOCK_LISTINGS: ProduceListing[] = [
   },
 ];
 
+const MOCK_JOBS: LogisticsJob[] = [
+  {
+    id: 'job-401',
+    status: 'IN_TRANSIT',
+    totalLoad: 5000,
+    totalDistance: 184,
+    estimatedCost: 12500,
+    consolidatedSaving: 4800,
+    separateTripsCost: 17300,
+    routePoints: [
+      { id: 'p-1', name: 'Dindori Farm Hub (Rajesh Patil)', lat: 20.2000, lng: 73.8300, load: 2500, type: 'pickup' },
+      { id: 'p-2', name: 'Niphad FPO Aggregation Center', lat: 20.0800, lng: 74.1100, load: 2500, type: 'pickup' },
+      { id: 'd-1', name: 'Mumbai Cold Storage Facility, Vashi', lat: 19.0760, lng: 72.9980, load: 5000, type: 'delivery' },
+    ],
+    pickupSequence: [
+      { id: 'p-1', name: 'Dindori Farm Hub (Rajesh Patil)', lat: 20.2000, lng: 73.8300, load: 2500, type: 'pickup' },
+      { id: 'p-2', name: 'Niphad FPO Aggregation Center', lat: 20.0800, lng: 74.1100, load: 2500, type: 'pickup' },
+    ],
+    route: {
+      waypoints: [
+        { id: 'p-1', name: 'Dindori Farm Hub (Rajesh Patil)', lat: 20.2000, lng: 73.8300, load: 2500, type: 'pickup' },
+        { id: 'p-2', name: 'Niphad FPO Aggregation Center', lat: 20.0800, lng: 74.1100, load: 2500, type: 'pickup' },
+        { id: 'd-1', name: 'Mumbai Cold Storage Facility, Vashi', lat: 19.0760, lng: 72.9980, load: 5000, type: 'delivery' },
+      ],
+      totalDistance: 184,
+      estimatedTime: 4.5,
+      estimatedCost: 12500,
+      vehicleCapacity: 10000,
+    },
+    vehicle: {
+      id: 'veh-1',
+      type: 'Refrigerated 10T Truck',
+      registration: 'MH-15-EG-4412',
+      capacity: 10000,
+      isAvailable: false,
+    },
+    provider: DEMO_USERS_MAP['logistics@agrichain.in'].user.logisticsProvider,
+    isEstimate: false,
+  },
+  {
+    id: 'job-402',
+    status: 'ASSIGNED',
+    totalLoad: 3000,
+    totalDistance: 142,
+    estimatedCost: 8200,
+    consolidatedSaving: 3100,
+    separateTripsCost: 11300,
+    routePoints: [
+      { id: 'p-3', name: 'Narayangaon Farm Hub (Pune)', lat: 19.1200, lng: 73.9700, load: 3000, type: 'pickup' },
+      { id: 'd-2', name: 'Pune Central APMC Hub', lat: 18.5204, lng: 73.8567, load: 3000, type: 'delivery' },
+    ],
+    pickupSequence: [
+      { id: 'p-3', name: 'Narayangaon Farm Hub (Pune)', lat: 19.1200, lng: 73.9700, load: 3000, type: 'pickup' },
+    ],
+    route: {
+      waypoints: [
+        { id: 'p-3', name: 'Narayangaon Farm Hub (Pune)', lat: 19.1200, lng: 73.9700, load: 3000, type: 'pickup' },
+        { id: 'd-2', name: 'Pune Central APMC Hub', lat: 18.5204, lng: 73.8567, load: 3000, type: 'delivery' },
+      ],
+      totalDistance: 142,
+      estimatedTime: 3.2,
+      estimatedCost: 8200,
+      vehicleCapacity: 6000,
+    },
+    vehicle: {
+      id: 'veh-2',
+      type: 'Refrigerated 6T Van',
+      registration: 'MH-12-KC-9821',
+      capacity: 6000,
+      isAvailable: true,
+    },
+    provider: DEMO_USERS_MAP['logistics@agrichain.in'].user.logisticsProvider,
+    isEstimate: false,
+  },
+];
+
 const MOCK_ORDERS: Order[] = [
   {
     id: 'ord-301',
@@ -217,34 +293,120 @@ const MOCK_ORDERS: Order[] = [
     requiredBy: '2026-03-25',
     traditionalRealization: 21.0,
     platformRealization: 26.2,
+    demand: MOCK_DEMANDS[0],
     buyer: DEMO_USERS_MAP['buyer@mumbai.com'].user.buyer,
+    items: [
+      {
+        id: 'item-1',
+        productName: 'Nashik Red Onion (Grade A)',
+        quantity: 2500,
+        grade: 'A',
+        pricePerKg: 26.2,
+        totalPrice: 65500,
+        farmerPayout: 65500,
+        farmer: { user: { name: 'Rajesh Patil' } },
+      },
+      {
+        id: 'item-2',
+        productName: 'Nashik Red Onion (Grade A)',
+        quantity: 2500,
+        grade: 'A',
+        pricePerKg: 26.2,
+        totalPrice: 65500,
+        farmerPayout: 65500,
+        fpo: { name: 'Nashik Sunrise Agro Producer Co.' },
+      },
+    ],
+    statusHistory: [
+      { id: 'sh-1', status: 'PENDING', note: 'Order created via AI consolidation', createdAt: '2026-03-15T09:00:00Z' },
+      { id: 'sh-2', status: 'CONFIRMED', note: 'Suppliers accepted allocations', createdAt: '2026-03-15T10:30:00Z' },
+      { id: 'sh-3', status: 'ASSIGNED', note: 'Refrigerated vehicle MH-15-EG-4412 assigned', createdAt: '2026-03-15T12:00:00Z' },
+      { id: 'sh-4', status: 'IN_TRANSIT', note: 'Consolidated load picked up, en route to Vashi', createdAt: '2026-03-16T06:00:00Z' },
+    ],
+    logisticsJob: MOCK_JOBS[0],
   },
 ];
 
-const MOCK_JOBS: LogisticsJob[] = [
+MOCK_JOBS[0].order = MOCK_ORDERS[0];
+
+const MOCK_SUPPLIER_MATCHES: SupplierMatch[] = [
   {
-    id: 'job-401',
-    status: 'IN_TRANSIT',
-    totalLoad: 5000,
-    totalDistance: 184,
-    estimatedCost: 12500,
-    consolidatedSaving: 4800,
-    separateTripsCost: 17300,
-    pickupSequence: [
-      { id: 'p-1', name: 'Dindori Farm Hub', lat: 20.2, lng: 73.8, load: 2500, type: 'PICKUP' },
-      { id: 'p-2', name: 'Niphad FPO Center', lat: 20.1, lng: 74.1, load: 2500, type: 'PICKUP' },
-      { id: 'd-1', name: 'Mumbai Cold Storage', lat: 19.07, lng: 72.87, load: 5000, type: 'DELIVERY' },
-    ],
-    vehicle: {
-      id: 'veh-1',
-      type: 'Refrigerated 10T Truck',
-      registration: 'MH-15-EG-4412',
-      capacity: 10000,
-      isAvailable: false,
+    id: 'match-1',
+    allocatedQty: 2500,
+    matchScore: 94,
+    priceScore: 95,
+    distanceScore: 92,
+    quantityScore: 94,
+    qualityScore: 96,
+    deliveryScore: 90,
+    reliabilityScore: 94,
+    isSelected: true,
+    supplierName: 'Patil Organic Farms (Rajesh Patil)',
+    supplierType: 'Farmer',
+    farmer: { user: { name: 'Rajesh Patil' } },
+    demand: {
+      id: 'dem-101',
+      quantity: 5000,
+      grade: 'A',
+      maxPrice: 32,
+      deliveryLocation: 'Mumbai Cold Storage Facility, Vashi',
+      requiredBy: '2026-03-25',
+      status: 'ACTIVE',
+      product: MOCK_PRODUCTS[0],
+      buyer: DEMO_USERS_MAP['buyer@mumbai.com'].user.buyer,
     },
-    provider: DEMO_USERS_MAP['logistics@agrichain.in'].user.logisticsProvider,
-    order: MOCK_ORDERS[0],
-    isEstimate: false,
+  },
+  {
+    id: 'match-2',
+    allocatedQty: 2500,
+    matchScore: 91,
+    priceScore: 92,
+    distanceScore: 89,
+    quantityScore: 90,
+    qualityScore: 92,
+    deliveryScore: 88,
+    reliabilityScore: 96,
+    isSelected: true,
+    supplierName: 'Nashik Sunrise Agro Producer Co.',
+    supplierType: 'FPO',
+    fpo: { name: 'Nashik Sunrise Agro Producer Co.' },
+    demand: {
+      id: 'dem-101',
+      quantity: 5000,
+      grade: 'A',
+      maxPrice: 32,
+      deliveryLocation: 'Mumbai Cold Storage Facility, Vashi',
+      requiredBy: '2026-03-25',
+      status: 'ACTIVE',
+      product: MOCK_PRODUCTS[0],
+      buyer: DEMO_USERS_MAP['buyer@mumbai.com'].user.buyer,
+    },
+  },
+  {
+    id: 'match-3',
+    allocatedQty: 2000,
+    matchScore: 88,
+    priceScore: 89,
+    distanceScore: 85,
+    quantityScore: 88,
+    qualityScore: 90,
+    deliveryScore: 86,
+    reliabilityScore: 94,
+    isSelected: true,
+    supplierName: 'Patil Organic Farms (Rajesh Patil)',
+    supplierType: 'Farmer',
+    farmer: { user: { name: 'Rajesh Patil' } },
+    demand: {
+      id: 'dem-102',
+      quantity: 3000,
+      grade: 'A',
+      maxPrice: 28,
+      deliveryLocation: 'Pune Central Distribution Hub',
+      requiredBy: '2026-03-28',
+      status: 'MATCHED',
+      product: MOCK_PRODUCTS[1],
+      buyer: DEMO_USERS_MAP['buyer@mumbai.com'].user.buyer,
+    },
   },
 ];
 
@@ -387,11 +549,37 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
   }
 
   if (path.startsWith('/farmers/matching')) {
-    return [] as unknown as T;
+    return MOCK_SUPPLIER_MATCHES as unknown as T;
   }
 
   if (path.startsWith('/farmers/orders')) {
-    return [] as unknown as T;
+    return [
+      {
+        id: 'item-1',
+        productName: 'Nashik Red Onion (Grade A)',
+        quantity: 2500,
+        farmerPayout: 65500,
+        order: MOCK_ORDERS[0],
+      },
+      {
+        id: 'item-2',
+        productName: 'Roma Tomato (Grade A)',
+        quantity: 1500,
+        farmerPayout: 36000,
+        order: {
+          id: 'ord-302',
+          orderNumber: 'ORD-2026-074',
+          status: 'DELIVERED',
+          totalQuantity: 3000,
+          totalAmount: 84000,
+          logisticsCost: 8000,
+          platformFee: 2500,
+          pricePerKg: 28,
+          deliveryLocation: 'Pune Central Distribution Hub',
+          requiredBy: '2026-03-12',
+        } as Order,
+      },
+    ] as unknown as T;
   }
 
   if (path.startsWith('/farmers/earnings')) {
@@ -415,6 +603,11 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
 
   if (path.startsWith('/logistics/profile')) {
     return DEMO_USERS_MAP['logistics@agrichain.in'].user.logisticsProvider as unknown as T;
+  }
+
+  if (path.startsWith('/logistics/jobs/')) {
+    const id = path.split('/')[3];
+    return (MOCK_JOBS.find((j) => j.id === id) || MOCK_JOBS[0]) as unknown as T;
   }
 
   if (path.startsWith('/logistics/jobs') || path.startsWith('/logistics/my')) {
@@ -484,9 +677,12 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
   }
 
   if (path.startsWith('/matching/')) {
+    if (path.includes('/confirm')) {
+      return { confirmed: 2 } as unknown as T;
+    }
     return {
       demand: MOCK_DEMANDS[0],
-      matches: [],
+      matches: MOCK_SUPPLIER_MATCHES.slice(0, 2),
       consolidation: {
         totalRequired: 5000,
         totalAllocated: 5000,
@@ -499,7 +695,8 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
   }
 
   if (path.startsWith('/orders/')) {
-    return MOCK_ORDERS[0] as unknown as T;
+    const id = path.split('/')[2];
+    return (MOCK_ORDERS.find((o) => o.id === id) || MOCK_ORDERS[0]) as unknown as T;
   }
 
   return undefined;
