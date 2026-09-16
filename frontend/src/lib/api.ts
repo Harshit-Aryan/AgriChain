@@ -37,7 +37,30 @@ const DEMO_USERS_MAP: Record<string, { user: User }> = {
       logisticsProvider: {
         id: 'logistics-profile-1',
         company: 'Raj Cold Chain Services',
-        location: 'Nashik Hub',
+        location: 'Nashik & Western Maharashtra Hub',
+        vehicles: [
+          {
+            id: 'veh-1',
+            type: 'REFRIGERATED_TRUCK',
+            registration: 'MH-15-EG-4412',
+            capacity: 10000,
+            isAvailable: false,
+          },
+          {
+            id: 'veh-2',
+            type: 'INSULATED_VAN',
+            registration: 'MH-12-KC-9821',
+            capacity: 6000,
+            isAvailable: true,
+          },
+          {
+            id: 'veh-3',
+            type: 'HEAVY_HAULER_15T',
+            registration: 'MH-04-AB-1234',
+            capacity: 15000,
+            isAvailable: true,
+          },
+        ],
       },
     },
   },

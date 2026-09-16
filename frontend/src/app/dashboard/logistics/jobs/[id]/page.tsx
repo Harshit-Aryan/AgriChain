@@ -3,10 +3,19 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Truck, MapPin, ArrowLeft, CheckCircle2, Play, Navigation } from 'lucide-react';
 import { api, LogisticsJob, RoutePoint } from '@/lib/api';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { RouteMap } from '@/components/map/RouteMap';
+
+const RouteMap = dynamic(() => import('@/components/map/RouteMap').then((m) => m.RouteMap), {
+  ssr: false,
+  loading: () => (
+    <div className="bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 animate-pulse" style={{ height: '380px' }}>
+      Loading Dispatch Map...
+    </div>
+  ),
+});
 
 export default function LogisticsJobDetailPage() {
   const { id } = useParams<{ id: string }>();

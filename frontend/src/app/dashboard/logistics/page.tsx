@@ -20,8 +20,8 @@ export default function LogisticsDashboard() {
     ])
       .then(([prof, avail, mine]) => {
         if (prof) setProfile(prof);
-        setAvailableJobs(avail);
-        setMyJobs(mine);
+        setAvailableJobs(Array.isArray(avail) ? avail : []);
+        setMyJobs(Array.isArray(mine) ? mine : []);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -29,10 +29,10 @@ export default function LogisticsDashboard() {
 
   if (loading) return <div className="text-gray-500">Loading logistics command center...</div>;
 
-  const vehicles: Vehicle[] = profile?.vehicles || [];
-  const activeJobs = myJobs.filter((j) => j.status === 'ASSIGNED' || j.status === 'IN_PROGRESS');
-  const completedJobs = myJobs.filter((j) => j.status === 'COMPLETED');
-  const totalTonnageHauled = completedJobs.reduce((sum, j) => sum + (j.totalLoad || 0), 0);
+  const vehicles: Vehicle[] = Array.isArray(profile?.vehicles) ? profile.vehicles : [];
+  const activeJobs = Array.isArray(myJobs) ? myJobs.filter((j) => j && (j.status === 'ASSIGNED' || j.status === 'IN_PROGRESS')) : [];
+  const completedJobs = Array.isArray(myJobs) ? myJobs.filter((j) => j && j.status === 'COMPLETED') : [];
+  const totalTonnageHauled = completedJobs.reduce((sum, j) => sum + (Number(j?.totalLoad) || 0), 0);
 
   return (
     <div className="space-y-8">
@@ -102,7 +102,7 @@ export default function LogisticsDashboard() {
                   <div>
                     <p className="font-semibold text-gray-900 font-mono text-sm">{v.registration}</p>
                     <p className="text-xs text-gray-500">
-                      {v.type.replace('_', ' ')} • Capacity: {v.capacity.toLocaleString('en-IN')} kg
+                      {v.type.replace('_', ' ')} • Capacity: {(v.capacity ?? 0).toLocaleString('en-IN')} kg
                     </p>
                   </div>
                   <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
@@ -146,7 +146,7 @@ export default function LogisticsDashboard() {
                       <StatusBadge status={job.status} />
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      Load: {job.totalLoad.toLocaleString('en-IN')} kg • {job.totalDistance ?? 0} km est.
+                      Load: {(job.totalLoad ?? 0).toLocaleString('en-IN')} kg • {job.totalDistance ?? 0} km est.
                     </p>
                     <p className="text-xs text-navy-800 mt-0.5">
                       Assigned Vehicle: <span className="font-mono font-medium">{job.vehicle?.registration || 'Vehicle Allocated'}</span>
@@ -196,13 +196,13 @@ export default function LogisticsDashboard() {
               <tbody className="divide-y divide-gray-100">
                 {availableJobs.slice(0, 3).map((job) => (
                   <tr key={job.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="py-3 font-mono font-semibold text-gray-900">{job.order?.orderNumber || job.id.slice(0, 8)}</td>
-                    <td className="py-3 font-medium">{job.totalLoad.toLocaleString('en-IN')} kg</td>
+                    <td className="py-3 font-mono font-semibold text-gray-900">{job.order?.orderNumber || (job.id ? job.id.slice(0, 8) : 'JOB')}</td>
+                    <td className="py-3 font-medium">{(job.totalLoad ?? 0).toLocaleString('en-IN')} kg</td>
                     <td className="py-3 text-gray-700">{job.order?.deliveryLocation || 'Mumbai Hub'}</td>
-                    <td className="py-3 text-gray-600">{job.totalDistance} km</td>
-                    <td className="py-3 font-bold text-gray-900">₹{job.estimatedCost?.toLocaleString('en-IN')}</td>
+                    <td className="py-3 text-gray-600">{job.totalDistance ?? 0} km</td>
+                    <td className="py-3 font-bold text-gray-900">₹{(job.estimatedCost ?? 0).toLocaleString('en-IN')}</td>
                     <td className="py-3 text-primary-700 font-semibold">
-                      ₹{job.consolidatedSaving?.toLocaleString('en-IN') || 0}
+                      ₹{(job.consolidatedSaving ?? 0).toLocaleString('en-IN')}
                     </td>
                     <td className="py-3 text-right">
                       <Link href="/dashboard/logistics/jobs" className="btn-primary text-xs px-3 py-1.5">

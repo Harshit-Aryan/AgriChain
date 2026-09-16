@@ -1,10 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { MapPin, Navigation, Clock, Truck, TrendingDown, IndianRupee, Layers } from 'lucide-react';
 import { api, LogisticsJob, RoutePoint } from '@/lib/api';
-import { RouteMap } from '@/components/map/RouteMap';
 import { StatusBadge } from '@/components/ui/StatusBadge';
+
+const RouteMap = dynamic(() => import('@/components/map/RouteMap').then((m) => m.RouteMap), {
+  ssr: false,
+  loading: () => (
+    <div className="bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 animate-pulse" style={{ height: '440px' }}>
+      Loading Route Circuit Map...
+    </div>
+  ),
+});
 
 export default function LogisticsRoutesPage() {
   const [jobs, setJobs] = useState<LogisticsJob[]>([]);
@@ -14,7 +23,9 @@ export default function LogisticsRoutesPage() {
   useEffect(() => {
     Promise.all([api.logistics.myJobs().catch(() => []), api.logistics.jobs().catch(() => [])])
       .then(([mine, avail]) => {
-        const combined = [...mine, ...avail];
+        const listMine = Array.isArray(mine) ? mine : [];
+        const listAvail = Array.isArray(avail) ? avail : [];
+        const combined = [...listMine, ...listAvail];
         // Unique by id
         const unique = Array.from(new Map(combined.map((j) => [j.id, j])).values());
         setJobs(unique);
@@ -28,17 +39,23 @@ export default function LogisticsRoutesPage() {
 
   const activeJob = jobs.find((j) => j.id === selectedJobId) || jobs[0] || null;
 
-  const rawPoints = (activeJob?.routePoints || activeJob?.route?.waypoints || activeJob?.pickupSequence || []) as RoutePoint[];
-  const points = rawPoints.map((p, idx) => ({
-    name: p.name,
-    lat: p.lat,
-    lng: p.lng,
-    type: (p.type || (idx === rawPoints.length - 1 ? 'delivery' : 'pickup')).toLowerCase(),
-    load: p.load,
-  }));
+  const rawPoints = (activeJob?.routePoints || activeJob?.route?.waypoints || activeJob?.pickupSequence || []) as any[];
+  const points = (Array.isArray(rawPoints) ? rawPoints : []).map((p: any, idx) => {
+    const isString = typeof p === 'string';
+    const name = isString ? p : (p.name || `Stop ${idx + 1}`);
+    return {
+      name,
+      lat: !isString ? p.lat : undefined,
+      lng: !isString ? p.lng : undefined,
+      type: isString
+        ? (idx === rawPoints.length - 1 ? 'delivery' : 'pickup')
+        : (p.type || (idx === rawPoints.length - 1 ? 'delivery' : 'pickup')).toLowerCase(),
+      load: !isString ? p.load : undefined,
+    };
+  });
 
   const pickups = points.filter((p) => p.type === 'pickup');
-  const delivery = points.find((p) => p.type === 'delivery') || points[points.length - 1];
+  const delivery = points.find((p) => p.type === 'delivery') || (points.length > 1 ? points[points.length - 1] : null);
 
   if (loading) return <div className="text-gray-500">Loading route optimization matrix...</div>;
 
