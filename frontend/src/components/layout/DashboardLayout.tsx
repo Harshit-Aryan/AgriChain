@@ -92,7 +92,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           <Link href="/" className="flex items-center gap-2">
             <Leaf className="w-7 h-7 text-primary-400" />
             <div>
-              <p className="font-bold text-lg leading-tight">AgriChain</p>
+              <p className="font-bold text-lg leading-tight">KRISHILINK</p>
               <p className="text-xs text-gray-400">Demand-to-Delivery</p>
             </div>
           </Link>
@@ -137,7 +137,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg hover:bg-gray-100">
             <Menu className="w-5 h-5" />
           </button>
-          <span className="font-semibold text-gray-900">AgriChain</span>
+          <span className="font-semibold text-gray-900">KRISHILINK</span>
         </header>
         <main className="flex-1 p-4 lg:p-8 overflow-auto">{children}</main>
       </div>

@@ -17,7 +17,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Leaf className="w-8 h-8 text-primary-700" />
-            <span className="font-bold text-xl text-navy-900">AgriChain</span>
+            <span className="font-bold text-xl text-navy-900">KRISHILINK</span>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900">Sign In</Link>
@@ -96,7 +96,7 @@ export default function LandingPage() {
       </section>
 
       <footer className="border-t border-gray-100 py-8 text-center text-sm text-gray-500">
-        AgriChain — AI-Powered Demand-to-Delivery Agricultural Supply Chain © 2026
+        KRISHILINK — AI-Powered Demand-to-Delivery Agricultural Supply Chain © 2026
       </footer>
     </div>
   );

@@ -164,7 +164,7 @@ export default function RegisterPage() {
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2 mb-2">
             <Leaf className="w-8 h-8 text-primary-700" />
-            <span className="font-bold text-2xl text-navy-900">AgriChain</span>
+            <span className="font-bold text-2xl text-navy-900">KRISHILINK</span>
           </Link>
           <h2 className="text-3xl font-extrabold text-gray-900">Create your account</h2>
           <p className="mt-2 text-sm text-gray-600">

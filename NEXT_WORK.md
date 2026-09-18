@@ -1,4 +1,4 @@
-# AgriChain — Next Work Handoff
+# KRISHILINK — Next Work Handoff
 
 Copy the **PROMPT** below into a new Cursor chat in `d:\Farmer`. Do **not** rebuild the project. Finish remaining screens, then run, fix, seed, and document.
 
@@ -9,7 +9,7 @@ Copy the **PROMPT** below into a new Cursor chat in `d:\Farmer`. Do **not** rebu
 ```
 Continue the existing SIH prototype in d:\Farmer. Do NOT start from scratch. Do NOT rewrite working backend modules unless they are broken.
 
-PROJECT: AgriChain — AI-Powered Demand-to-Delivery Agricultural Supply Chain
+PROJECT: KRISHILINK — AI-Powered Demand-to-Delivery Agricultural Supply Chain
 Stack already in place:
 - backend: NestJS + Prisma + PostgreSQL + JWT RBAC (port 3001, prefix /api, Swagger /api/docs)
 - frontend: Next.js 14 App Router + TypeScript + Tailwind (port 3000)
@@ -90,13 +90,13 @@ Login buyer@mumbai.com / demo123
 → Admin dashboard metrics update
 
 Demo accounts (password demo123):
-- admin@agrichain.in
+- admin@krishilink.in
 - buyer@mumbai.com
-- fpo.nashik@agrichain.in
-- fpo.pune@agrichain.in
-- farmer.rajesh@agrichain.in
-- farmer.sunita@agrichain.in
-- logistics@agrichain.in
+- fpo.nashik@krishilink.in
+- fpo.pune@krishilink.in
+- farmer.rajesh@krishilink.in
+- farmer.sunita@krishilink.in
+- logistics@krishilink.in
 
 ==================================================
 D. RUN AND VERIFY (mandatory before finishing)

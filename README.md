@@ -1,15 +1,15 @@
-# AgriChain — AI-Powered Demand-to-Delivery Agricultural Supply Chain
+# KRISHILINK — AI-Powered Demand-to-Delivery Agricultural Supply Chain
 **Smart India Hackathon (SIH 2026) Prototype**
 
 🚀 **Live Production Website:** [https://frontend-seven-bice-89.vercel.app](https://frontend-seven-bice-89.vercel.app)
 
-AgriChain is an intelligent, transparent agricultural supply chain platform connecting institutional buyers, Farmer Producer Organizations (FPOs), individual farmers, and logistics providers. The system replaces fragmented multi-intermediary supply lines with direct AI-powered multi-supplier matching, consolidated freight dispatching, transparent price realization, and predictive demand planning.
+KRISHILINK is an intelligent, transparent agricultural supply chain platform connecting institutional buyers, Farmer Producer Organizations (FPOs), individual farmers, and logistics providers. The system replaces fragmented multi-intermediary supply lines with direct AI-powered multi-supplier matching, consolidated freight dispatching, transparent price realization, and predictive demand planning.
 
 ---
 
 ## Architecture Overview
 
-AgriChain is built as a multi-tier modular architecture:
+KRISHILINK is built as a multi-tier modular architecture:
 
 ```
                   ┌─────────────────────────────────────┐
@@ -46,12 +46,12 @@ All seeded accounts share the same password: **`demo123`**
 | Role | Email | Name / Entity | Purpose |
 |------|-------|---------------|---------|
 | **Buyer** | `buyer@mumbai.com` | Vikram Mehta (SpiceRoute Restaurants) | Post demand, run AI matching, order |
-| **Logistics** | `logistics@agrichain.in` | Raj Transport Services / Cold Chain | Accept transport jobs, update transit status |
-| **FPO A** | `fpo.nashik@agrichain.in` | Nashik Sunrise FPO (45 members) | Supply aggregator (3,000 kg Grade-A Tomato) |
-| **FPO B** | `fpo.pune@agrichain.in` | Pune Sahyadri FPO (62 members) | Supply aggregator (4,000 kg Grade-A Tomato) |
-| **Farmer C**| `farmer.rajesh@agrichain.in` | Rajesh Patil (Patil Organic Farm) | Direct farm listing (2,000 kg Grade-A Tomato) |
-| **Farmer D**| `farmer.sunita@agrichain.in` | Sunita Deshmukh (Deshmukh Veg Farm)| Direct farm listing (1,000 kg Grade-A Tomato) |
-| **Admin** | `admin@agrichain.in` | System Administrator | Platform analytics & user oversight |
+| **Logistics** | `logistics@krishilink.in` | Raj Transport Services / Cold Chain | Accept transport jobs, update transit status |
+| **FPO A** | `fpo.nashik@krishilink.in` | Nashik Sunrise FPO (45 members) | Supply aggregator (3,000 kg Grade-A Tomato) |
+| **FPO B** | `fpo.pune@krishilink.in` | Pune Sahyadri FPO (62 members) | Supply aggregator (4,000 kg Grade-A Tomato) |
+| **Farmer C**| `farmer.rajesh@krishilink.in` | Rajesh Patil (Patil Organic Farm) | Direct farm listing (2,000 kg Grade-A Tomato) |
+| **Farmer D**| `farmer.sunita@krishilink.in` | Sunita Deshmukh (Deshmukh Veg Farm)| Direct farm listing (1,000 kg Grade-A Tomato) |
+| **Admin** | `admin@krishilink.in` | System Administrator | Platform analytics & user oversight |
 
 ---
 
@@ -120,14 +120,14 @@ uvicorn main:app --port 8000
 
 ### Step 2: Confirmation & Consolidated Order Creation
 1. Click **Confirm Suppliers & Create Order**.
-2. AgriChain generates a consolidated Order (`ORD-...`), updates demand to `FULFILLED`, reserves inventory, and automatically creates a consolidated **Logistics Job**.
+2. KRISHILINK generates a consolidated Order (`ORD-...`), updates demand to `FULFILLED`, reserves inventory, and automatically creates a consolidated **Logistics Job**.
 3. Inspect the **Order Detail Page**:
    - Visual Order Timeline: `CONFIRMED` → `PROCESSING`
    - Sourcing Breakdown table with per-supplier payouts
    - Transparent Price Breakdown card: buyer price, logistics fee, platform fee, and farmer net realization.
 
 ### Step 3: Logistics Dispatch & Execution
-1. Open an incognito window or log out and log in with **`logistics@agrichain.in`** / **`demo123`**.
+1. Open an incognito window or log out and log in with **`logistics@krishilink.in`** / **`demo123`**.
 2. Visit **Available Jobs** (`/dashboard/logistics/jobs`).
 3. Select vehicle `MH-04-AB-1234` (Raj Cold Chain) and click **Accept & Assign Vehicle**.
 4. Head to **My Jobs** (`/dashboard/logistics/my-jobs`) or **Route Map** (`/dashboard/logistics/routes`):
@@ -138,13 +138,13 @@ uvicorn main:app --port 8000
    - Click **Mark Delivered** (`COMPLETED` → order becomes `DELIVERED`).
 
 ### Step 4: Farmer / FPO Settlement & Transparency
-1. Log in with **`fpo.nashik@agrichain.in`** or **`farmer.rajesh@agrichain.in`** / **`demo123`**.
+1. Log in with **`fpo.nashik@krishilink.in`** or **`farmer.rajesh@krishilink.in`** / **`demo123`**.
 2. View **Earnings & Orders**:
    - Exact payout realized for supplied quantity.
    - Elimination of unauthorized APMC commission deductions.
 
 ### Step 5: Admin Platform Oversight
-1. Log in with **`admin@agrichain.in`** / **`demo123`**.
+1. Log in with **`admin@krishilink.in`** / **`demo123`**.
 2. View real-time platform metrics: total transaction volume, active demands, regional crop demand trends, and system health.
 
 ---

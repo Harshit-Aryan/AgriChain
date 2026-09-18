@@ -1,5 +1,5 @@
 """
-AgriChain AI Service - Demand Forecasting
+KRISHILINK AI Service - Demand Forecasting
 Architecture ready for future ML model integration (Python/scikit-learn/OR-Tools)
 """
 from datetime import datetime, timedelta
@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 app = FastAPI(
-    title="AgriChain AI Service",
+    title="KRISHILINK AI Service",
     description="Demand forecasting and ML-ready API for agricultural supply chain",
     version="1.0.0",
 )
@@ -95,7 +95,7 @@ def simple_forecast(product: str, location: str, historical: Optional[list] = No
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "agrichain-ai", "timestamp": datetime.utcnow().isoformat()}
+    return {"status": "ok", "service": "krishilink-ai", "timestamp": datetime.utcnow().isoformat()}
 
 
 @app.post("/forecast", response_model=ForecastResponse)

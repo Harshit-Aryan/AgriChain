@@ -5,94 +5,98 @@ function getToken(): string | null {
   return localStorage.getItem('token');
 }
 
+const ADMIN_USER: User = {
+  id: 'admin-1',
+  email: 'admin@krishilink.in',
+  name: 'System Admin',
+  role: 'ADMIN',
+};
+
+const BUYER_USER: User = {
+  id: 'buyer-1',
+  email: 'buyer@mumbai.com',
+  name: 'Vikram Mehta (SpiceRoute)',
+  role: 'BUYER',
+  buyer: {
+    id: 'buyer-profile-1',
+    company: 'SpiceRoute Foods Mumbai',
+    buyerType: 'PROCESSOR',
+    location: 'Mumbai, Maharashtra',
+  },
+};
+
+const LOGISTICS_USER: User = {
+  id: 'logistics-1',
+  email: 'logistics@krishilink.in',
+  name: 'Raj Cold Chain Services',
+  role: 'LOGISTICS',
+  logisticsProvider: {
+    id: 'logistics-profile-1',
+    company: 'Raj Cold Chain Services',
+    location: 'Nashik & Western Maharashtra Hub',
+    vehicles: [
+      {
+        id: 'veh-1',
+        type: 'REFRIGERATED_TRUCK',
+        registration: 'MH-15-EG-4412',
+        capacity: 10000,
+        isAvailable: false,
+      },
+      {
+        id: 'veh-2',
+        type: 'INSULATED_VAN',
+        registration: 'MH-12-KC-9821',
+        capacity: 6000,
+        isAvailable: true,
+      },
+      {
+        id: 'veh-3',
+        type: 'HEAVY_HAULER_15T',
+        registration: 'MH-04-AB-1234',
+        capacity: 15000,
+        isAvailable: true,
+      },
+    ],
+  },
+};
+
+const FARMER_RAJESH_USER: User = {
+  id: 'farmer-1',
+  email: 'farmer.rajesh@krishilink.in',
+  name: 'Rajesh Patil',
+  role: 'FARMER',
+  farmer: {
+    id: 'farmer-profile-1',
+    farmName: 'Patil Organic Farms',
+    location: 'Nashik, Maharashtra',
+    reliabilityScore: 94,
+  },
+};
+
+const FPO_NASHIK_USER: User = {
+  id: 'fpo-1',
+  email: 'fpo.nashik@krishilink.in',
+  name: 'Nashik Sunrise FPO',
+  role: 'FPO',
+  fpo: {
+    id: 'fpo-profile-1',
+    name: 'Nashik Sunrise Agro Producer Co.',
+    location: 'Nashik, Maharashtra',
+    memberCount: 45,
+    reliabilityScore: 96,
+  },
+};
+
 const DEMO_USERS_MAP: Record<string, { user: User }> = {
-  'admin@agrichain.in': {
-    user: {
-      id: 'admin-1',
-      email: 'admin@agrichain.in',
-      name: 'System Admin',
-      role: 'ADMIN',
-    },
-  },
-  'buyer@mumbai.com': {
-    user: {
-      id: 'buyer-1',
-      email: 'buyer@mumbai.com',
-      name: 'Vikram Mehta (SpiceRoute)',
-      role: 'BUYER',
-      buyer: {
-        id: 'buyer-profile-1',
-        company: 'SpiceRoute Foods Mumbai',
-        buyerType: 'PROCESSOR',
-        location: 'Mumbai, Maharashtra',
-      },
-    },
-  },
-  'logistics@agrichain.in': {
-    user: {
-      id: 'logistics-1',
-      email: 'logistics@agrichain.in',
-      name: 'Raj Cold Chain Services',
-      role: 'LOGISTICS',
-      logisticsProvider: {
-        id: 'logistics-profile-1',
-        company: 'Raj Cold Chain Services',
-        location: 'Nashik & Western Maharashtra Hub',
-        vehicles: [
-          {
-            id: 'veh-1',
-            type: 'REFRIGERATED_TRUCK',
-            registration: 'MH-15-EG-4412',
-            capacity: 10000,
-            isAvailable: false,
-          },
-          {
-            id: 'veh-2',
-            type: 'INSULATED_VAN',
-            registration: 'MH-12-KC-9821',
-            capacity: 6000,
-            isAvailable: true,
-          },
-          {
-            id: 'veh-3',
-            type: 'HEAVY_HAULER_15T',
-            registration: 'MH-04-AB-1234',
-            capacity: 15000,
-            isAvailable: true,
-          },
-        ],
-      },
-    },
-  },
-  'farmer.rajesh@agrichain.in': {
-    user: {
-      id: 'farmer-1',
-      email: 'farmer.rajesh@agrichain.in',
-      name: 'Rajesh Patil',
-      role: 'FARMER',
-      farmer: {
-        id: 'farmer-profile-1',
-        farmName: 'Patil Organic Farms',
-        location: 'Nashik, Maharashtra',
-        reliabilityScore: 94,
-      },
-    },
-  },
-  'fpo.nashik@agrichain.in': {
-    user: {
-      id: 'fpo-1',
-      email: 'fpo.nashik@agrichain.in',
-      name: 'Nashik Sunrise FPO',
-      role: 'FPO',
-      fpo: {
-        id: 'fpo-profile-1',
-        name: 'Nashik Sunrise Agro Producer Co.',
-        location: 'Nashik, Maharashtra',
-        memberCount: 45,
-        reliabilityScore: 96,
-      },
-    },
-  },
+  'admin@krishilink.in': { user: ADMIN_USER },
+  'admin@agrichain.in': { user: ADMIN_USER },
+  'buyer@mumbai.com': { user: BUYER_USER },
+  'logistics@krishilink.in': { user: LOGISTICS_USER },
+  'logistics@agrichain.in': { user: LOGISTICS_USER },
+  'farmer.rajesh@krishilink.in': { user: FARMER_RAJESH_USER },
+  'farmer.rajesh@agrichain.in': { user: FARMER_RAJESH_USER },
+  'fpo.nashik@krishilink.in': { user: FPO_NASHIK_USER },
+  'fpo.nashik@agrichain.in': { user: FPO_NASHIK_USER },
 };
 
 const MOCK_PRODUCTS: Product[] = [
@@ -262,7 +266,7 @@ const MOCK_JOBS: LogisticsJob[] = [
       capacity: 10000,
       isAvailable: false,
     },
-    provider: DEMO_USERS_MAP['logistics@agrichain.in'].user.logisticsProvider,
+    provider: DEMO_USERS_MAP['logistics@krishilink.in'].user.logisticsProvider,
     isEstimate: false,
   },
   {
@@ -297,7 +301,7 @@ const MOCK_JOBS: LogisticsJob[] = [
       capacity: 6000,
       isAvailable: true,
     },
-    provider: DEMO_USERS_MAP['logistics@agrichain.in'].user.logisticsProvider,
+    provider: DEMO_USERS_MAP['logistics@krishilink.in'].user.logisticsProvider,
     isEstimate: false,
   },
 ];
@@ -512,7 +516,7 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
   }
 
   if (path === '/auth/profile') {
-    return (getUser() || DEMO_USERS_MAP['admin@agrichain.in'].user) as unknown as T;
+    return (getUser() || DEMO_USERS_MAP['admin@krishilink.in'].user) as unknown as T;
   }
 
   if (path === '/analytics/dashboard') {
@@ -556,11 +560,11 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
   }
 
   if (path.startsWith('/farmers/profile')) {
-    return DEMO_USERS_MAP['farmer.rajesh@agrichain.in'].user.farmer as unknown as T;
+    return DEMO_USERS_MAP['farmer.rajesh@krishilink.in'].user.farmer as unknown as T;
   }
 
   if (path.startsWith('/farmers/fpo/profile')) {
-    return DEMO_USERS_MAP['fpo.nashik@agrichain.in'].user.fpo as unknown as T;
+    return DEMO_USERS_MAP['fpo.nashik@krishilink.in'].user.fpo as unknown as T;
   }
 
   if (path.startsWith('/farmers/listings')) {
@@ -625,7 +629,7 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
   }
 
   if (path.startsWith('/logistics/profile')) {
-    return DEMO_USERS_MAP['logistics@agrichain.in'].user.logisticsProvider as unknown as T;
+    return DEMO_USERS_MAP['logistics@krishilink.in'].user.logisticsProvider as unknown as T;
   }
 
   if (path.startsWith('/logistics/jobs/')) {

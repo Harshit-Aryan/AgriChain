@@ -1,7 +1,7 @@
 {
-  "name": "agri-chain-backend",
+  "name": "krishilink-backend",
   "version": "1.0.0",
-  "description": "AI-Powered Demand-to-Delivery Agricultural Supply Chain API",
+  "description": "KRISHILINK — AI-Powered Demand-to-Delivery Agricultural Supply Chain API",
   "scripts": {
     "build": "nest build",
     "start": "nest start",

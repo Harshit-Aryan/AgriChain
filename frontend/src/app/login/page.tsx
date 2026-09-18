@@ -16,7 +16,7 @@ const ROLE_REDIRECT: Record<string, string> = {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@agrichain.in');
+  const [email, setEmail] = useState('admin@krishilink.in');
   const [password, setPassword] = useState('demo123');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,7 +47,7 @@ export default function LoginPage() {
         <div className="relative z-10">
           <Link href="/" className="inline-flex items-center gap-2">
             <Leaf className="w-8 h-8 text-primary-400" />
-            <span className="font-bold text-2xl tracking-tight">AgriChain</span>
+            <span className="font-bold text-2xl tracking-tight">KRISHILINK</span>
           </Link>
           <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-primary-300">
             SIH 2026 National Finalist Prototype
@@ -69,7 +69,7 @@ export default function LoginPage() {
             <div className="text-sm font-mono space-y-1">
               <div className="flex justify-between">
                 <span className="text-gray-400">Email:</span>
-                <span className="text-white font-semibold">admin@agrichain.in</span>
+                <span className="text-white font-semibold">admin@krishilink.in</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Password:</span>
@@ -80,7 +80,7 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 text-xs text-gray-400">
-          AgriChain Platform © 2026. All benchmark comparisons are algorithmic estimates.
+          KRISHILINK Platform © 2026. All benchmark comparisons are algorithmic estimates.
         </div>
       </div>
 
@@ -91,7 +91,7 @@ export default function LoginPage() {
           <div className="lg:hidden mb-6 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <Leaf className="w-6 h-6 text-primary-700" />
-              <span className="font-bold text-xl text-navy-900">AgriChain</span>
+              <span className="font-bold text-xl text-navy-900">KRISHILINK</span>
             </Link>
             <Link href="/register" className="text-sm font-semibold text-primary-700">
               Register →
@@ -101,7 +101,7 @@ export default function LoginPage() {
           <div className="card p-8 shadow-md">
             <div className="flex items-center justify-between pb-4 border-b border-gray-100">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Sign in to AgriChain</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Sign in to KRISHILINK</h2>
                 <p className="mt-1 text-gray-500 text-sm">Enter your account credentials</p>
               </div>
               <Link href="/register" className="hidden sm:inline-flex text-xs font-semibold text-primary-700 hover:underline">
@@ -132,7 +132,7 @@ export default function LoginPage() {
               <div className="space-y-1.5 text-xs font-mono">
                 <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
                   <span className="text-slate-400 font-sans">Admin (Control Tower):</span>
-                  <span className="text-amber-300 font-semibold">admin@agrichain.in</span>
+                  <span className="text-amber-300 font-semibold">admin@krishilink.in</span>
                 </div>
                 <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
                   <span className="text-slate-400 font-sans">Buyer (SpiceRoute):</span>
@@ -140,15 +140,15 @@ export default function LoginPage() {
                 </div>
                 <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
                   <span className="text-slate-400 font-sans">Logistics (Fleet):</span>
-                  <span className="text-white">logistics@agrichain.in</span>
+                  <span className="text-white">logistics@krishilink.in</span>
                 </div>
                 <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
                   <span className="text-slate-400 font-sans">Farmer (Producer):</span>
-                  <span className="text-white">farmer.rajesh@agrichain.in</span>
+                  <span className="text-white">farmer.rajesh@krishilink.in</span>
                 </div>
                 <div className="flex items-center justify-between p-1.5 rounded bg-white/5">
                   <span className="text-slate-400 font-sans">FPO (Aggregator):</span>
-                  <span className="text-white">fpo.nashik@agrichain.in</span>
+                  <span className="text-white">fpo.nashik@krishilink.in</span>
                 </div>
               </div>
             </div>
@@ -160,7 +160,7 @@ export default function LoginPage() {
                 <input
                   type="email"
                   className="input"
-                  placeholder="admin@agrichain.in"
+                  placeholder="admin@krishilink.in"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required

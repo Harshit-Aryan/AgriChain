@@ -24,7 +24,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
-    .setTitle('AgriChain API')
+    .setTitle('KRISHILINK API')
     .setDescription('AI-Powered Demand-to-Delivery Agricultural Supply Chain')
     .setVersion('1.0')
     .addBearerAuth()
@@ -34,7 +34,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
-  console.log(`AgriChain API running on http://localhost:${port}`);
+  console.log(`KRISHILINK API running on http://localhost:${port}`);
   console.log(`Swagger docs at http://localhost:${port}/api/docs`);
 }
 bootstrap();

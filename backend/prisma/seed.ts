@@ -13,7 +13,7 @@ const LOCATIONS = {
 };
 
 async function main() {
-  console.log('Seeding AgriChain database...');
+  console.log('Seeding KRISHILINK database...');
   await prisma.orderStatusHistory.deleteMany();
   await prisma.payment.deleteMany();
   await prisma.route.deleteMany();
@@ -53,7 +53,7 @@ async function main() {
   const tomato = products.find((p) => p.name === 'Tomato')!;
 
   const _admin = await prisma.user.create({
-    data: { email: 'admin@agrichain.in', passwordHash: hash, name: 'System Admin', role: UserRole.ADMIN, phone: '9876543210' },
+    data: { email: 'admin@krishilink.in', passwordHash: hash, name: 'System Admin', role: UserRole.ADMIN, phone: '9876543210' },
   });
 
   const buyerUser = await prisma.user.create({
@@ -72,7 +72,7 @@ async function main() {
   });
 
   const fpoAUser = await prisma.user.create({
-    data: { email: 'fpo.nashik@agrichain.in', passwordHash: hash, name: 'Sunrise FPO', role: UserRole.FPO, phone: '9876500001' },
+    data: { email: 'fpo.nashik@krishilink.in', passwordHash: hash, name: 'Sunrise FPO', role: UserRole.FPO, phone: '9876500001' },
   });
   const fpoA = await prisma.fPO.create({
     data: {
@@ -94,7 +94,7 @@ async function main() {
   });
 
   const fpoBUser = await prisma.user.create({
-    data: { email: 'fpo.pune@agrichain.in', passwordHash: hash, name: 'Sahyadri FPO', role: UserRole.FPO, phone: '9876500002' },
+    data: { email: 'fpo.pune@krishilink.in', passwordHash: hash, name: 'Sahyadri FPO', role: UserRole.FPO, phone: '9876500002' },
   });
   const fpoB = await prisma.fPO.create({
     data: {
@@ -116,7 +116,7 @@ async function main() {
   });
 
   const farmerCUser = await prisma.user.create({
-    data: { email: 'farmer.rajesh@agrichain.in', passwordHash: hash, name: 'Rajesh Patil', role: UserRole.FARMER, phone: '9876500003' },
+    data: { email: 'farmer.rajesh@krishilink.in', passwordHash: hash, name: 'Rajesh Patil', role: UserRole.FARMER, phone: '9876500003' },
   });
   const farmerC = await prisma.farmer.create({
     data: {
@@ -138,7 +138,7 @@ async function main() {
   });
 
   const farmerDUser = await prisma.user.create({
-    data: { email: 'farmer.sunita@agrichain.in', passwordHash: hash, name: 'Sunita Deshmukh', role: UserRole.FARMER, phone: '9876500004' },
+    data: { email: 'farmer.sunita@krishilink.in', passwordHash: hash, name: 'Sunita Deshmukh', role: UserRole.FARMER, phone: '9876500004' },
   });
   const farmerD = await prisma.farmer.create({
     data: {
@@ -160,9 +160,9 @@ async function main() {
   });
 
   const extraFarmers = [
-    { name: 'Anil Kulkarni', email: 'farmer.anil@agrichain.in', location: 'Nagpur' },
-    { name: 'Priya Sharma', email: 'farmer.priya@agrichain.in', location: 'Indore' },
-    { name: 'Mohammed Khan', email: 'farmer.khan@agrichain.in', location: 'Delhi' },
+    { name: 'Anil Kulkarni', email: 'farmer.anil@krishilink.in', location: 'Nagpur' },
+    { name: 'Priya Sharma', email: 'farmer.priya@krishilink.in', location: 'Indore' },
+    { name: 'Mohammed Khan', email: 'farmer.khan@krishilink.in', location: 'Delhi' },
   ];
   for (const f of extraFarmers) {
     const u = await prisma.user.create({
@@ -175,7 +175,7 @@ async function main() {
   }
 
   const logisticsUser = await prisma.user.create({
-    data: { email: 'logistics@agrichain.in', passwordHash: hash, name: 'Raj Transport Services', role: UserRole.LOGISTICS, phone: '9876500005' },
+    data: { email: 'logistics@krishilink.in', passwordHash: hash, name: 'Raj Transport Services', role: UserRole.LOGISTICS, phone: '9876500005' },
   });
   const logistics = await prisma.logisticsProvider.create({
     data: { userId: logisticsUser.id, company: 'Raj Cold Chain Logistics', location: 'Mumbai', latitude: LOCATIONS.Mumbai.lat, longitude: LOCATIONS.Mumbai.lng, costPerKm: 28, rating: 4.5 },
@@ -256,13 +256,13 @@ async function main() {
 
   console.log('Seed completed successfully!');
   console.log('\n=== DEMO CREDENTIALS (password: demo123) ===');
-  console.log('Admin:     admin@agrichain.in');
+  console.log('Admin:     admin@krishilink.in');
   console.log('Buyer:     buyer@mumbai.com');
-  console.log('FPO A:     fpo.nashik@agrichain.in');
-  console.log('FPO B:     fpo.pune@agrichain.in');
-  console.log('Farmer C:  farmer.rajesh@agrichain.in');
-  console.log('Farmer D:  farmer.sunita@agrichain.in');
-  console.log('Logistics: logistics@agrichain.in');
+  console.log('FPO A:     fpo.nashik@krishilink.in');
+  console.log('FPO B:     fpo.pune@krishilink.in');
+  console.log('Farmer C:  farmer.rajesh@krishilink.in');
+  console.log('Farmer D:  farmer.sunita@krishilink.in');
+  console.log('Logistics: logistics@krishilink.in');
   console.log(`\nDemo Demand ID: ${demoDemand.id}`);
   console.log('Product: 10,000 kg Grade-A Tomato for Mumbai');
 }
