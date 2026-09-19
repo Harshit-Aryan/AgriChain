@@ -15,8 +15,13 @@ export default function LogisticsMyJobsPage() {
 
   const loadJobs = () => {
     api.logistics.myJobs()
-      .then(setJobs)
-      .catch(console.error)
+      .then((data) => {
+        setJobs(Array.isArray(data) ? data : data ? [data] : []);
+      })
+      .catch((err) => {
+        console.error('Failed to load logistics jobs:', err);
+        setJobs([]);
+      })
       .finally(() => setLoading(false));
   };
 
@@ -46,7 +51,9 @@ export default function LogisticsMyJobsPage() {
 
   if (loading) return <div className="text-gray-500">Loading assigned logistics jobs...</div>;
 
-  const filteredJobs = jobs.filter((j) => {
+  const safeJobs = Array.isArray(jobs) ? jobs : [];
+  const filteredJobs = safeJobs.filter((j) => {
+    if (!j) return false;
     if (activeTab === 'ALL') return true;
     return j.status === activeTab;
   });
@@ -99,7 +106,7 @@ export default function LogisticsMyJobsPage() {
           >
             {tab.replace('_', ' ')}
             <span className="ml-1.5 opacity-70">
-              ({tab === 'ALL' ? jobs.length : jobs.filter((j) => j.status === tab).length})
+              ({tab === 'ALL' ? safeJobs.length : safeJobs.filter((j) => j && j.status === tab).length})
             </span>
           </button>
         ))}
@@ -114,15 +121,16 @@ export default function LogisticsMyJobsPage() {
       ) : (
         <div className="space-y-4">
           {filteredJobs.map((job) => {
+            if (!job) return null;
             const isUpdating = updatingId === job.id;
 
             return (
-              <div key={job.id} className="card p-6">
+              <div key={job.id || Math.random()} className="card p-6">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-gray-100">
                   <div>
                     <div className="flex items-center gap-3">
                       <span className="font-mono text-base font-bold text-gray-900">
-                        {job.order?.orderNumber || `Job #${job.id.slice(0, 8)}`}
+                        {job.order?.orderNumber || (job.id ? `Job #${String(job.id).slice(0, 8)}` : 'Job')}
                       </span>
                       <StatusBadge status={job.status} />
                     </div>
@@ -131,7 +139,7 @@ export default function LogisticsMyJobsPage() {
                       <span className="font-mono font-semibold text-navy-900">
                         {job.vehicle?.registration || 'Vehicle Allocated'}
                       </span>{' '}
-                      ({job.vehicle?.type?.replace('_', ' ') || 'Truck'})
+                      ({(job.vehicle?.type ? String(job.vehicle.type).replace(/_/g, ' ') : 'Truck')})
                     </p>
                   </div>
 
@@ -176,7 +184,7 @@ export default function LogisticsMyJobsPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 text-sm">
                   <div>
                     <span className="text-xs text-gray-500 block">Total Freight</span>
-                    <span className="font-semibold text-gray-900">{job.totalLoad?.toLocaleString('en-IN')} kg</span>
+                    <span className="font-semibold text-gray-900">{Number(job.totalLoad || 0).toLocaleString('en-IN')} kg</span>
                   </div>
                   <div>
                     <span className="text-xs text-gray-500 block">Delivery Destination</span>
@@ -188,7 +196,7 @@ export default function LogisticsMyJobsPage() {
                   </div>
                   <div>
                     <span className="text-xs text-gray-500 block">Payout (est.)</span>
-                    <span className="font-semibold text-green-800">₹{job.estimatedCost?.toLocaleString('en-IN')}</span>
+                    <span className="font-semibold text-green-800">₹{Number(job.estimatedCost || 0).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
               </div>

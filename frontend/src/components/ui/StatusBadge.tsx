@@ -18,10 +18,11 @@ const statusColors: Record<string, string> = {
   FULFILLED: 'bg-green-100 text-green-800',
 };
 
-export function StatusBadge({ status }: { status: string }) {
+export function StatusBadge({ status }: { status?: string }) {
+  const safeStatus = typeof status === 'string' ? status : '';
   return (
-    <span className={clsx('badge', statusColors[status] || 'bg-gray-100 text-gray-800')}>
-      {status.replace(/_/g, ' ')}
+    <span className={clsx('badge', statusColors[safeStatus] || 'bg-gray-100 text-gray-800')}>
+      {safeStatus.replace(/_/g, ' ') || 'UNKNOWN'}
     </span>
   );
 }

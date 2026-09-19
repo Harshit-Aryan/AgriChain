@@ -18,14 +18,17 @@ export default function LogisticsAvailableJobsPage() {
   const loadData = () => {
     Promise.all([api.logistics.jobs(), api.logistics.profile()])
       .then(([j, p]) => {
-        setJobs(j);
+        setJobs(Array.isArray(j) ? j : j ? [j] : []);
         setProfile(p);
-        if (p?.vehicles && p.vehicles.length > 0) {
+        if (p?.vehicles && Array.isArray(p.vehicles) && p.vehicles.length > 0) {
           const defaultVeh = p.vehicles.find((v) => v.isAvailable) || p.vehicles[0];
           setSelectedVehicleId(defaultVeh.id);
         }
       })
-      .catch(console.error)
+      .catch((err) => {
+        console.error('Failed to load available jobs:', err);
+        setJobs([]);
+      })
       .finally(() => setLoading(false));
   };
 

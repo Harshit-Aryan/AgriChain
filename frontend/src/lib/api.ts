@@ -632,12 +632,16 @@ function getMockFallback<T>(path: string, options: RequestInit = {}): T | undefi
     return DEMO_USERS_MAP['logistics@krishilink.in'].user.logisticsProvider as unknown as T;
   }
 
+  if (path === '/logistics/jobs/my' || path.startsWith('/logistics/jobs/my') || path.startsWith('/logistics/my')) {
+    return MOCK_JOBS as unknown as T;
+  }
+
   if (path.startsWith('/logistics/jobs/')) {
     const id = path.split('/')[3];
     return (MOCK_JOBS.find((j) => j.id === id) || MOCK_JOBS[0]) as unknown as T;
   }
 
-  if (path.startsWith('/logistics/jobs') || path.startsWith('/logistics/my')) {
+  if (path.startsWith('/logistics/jobs')) {
     return MOCK_JOBS as unknown as T;
   }
 
